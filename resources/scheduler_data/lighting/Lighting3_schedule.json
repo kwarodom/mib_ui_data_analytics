@@ -1,0 +1,169 @@
+{
+    "lighting": {
+        "Lighting3": {
+            "active": [
+                "everyday", 
+                "holiday"
+            ], 
+            "inactive": [], 
+            "schedulers": {
+                "everyday": {
+                    "friday": [
+                        {
+                            "at": 420, 
+                            "brightness": 100, 
+                            "color": "(255, 255, 255)", 
+                            "id": "1", 
+                            "nickname": "Period1", 
+                            "status": "ON"
+                        }, 
+                        {
+                            "at": 1140, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "2", 
+                            "nickname": "Period2", 
+                            "status": "OFF"
+                        }
+                    ], 
+                    "monday": [
+                        {
+                            "at": 420, 
+                            "brightness": 100, 
+                            "color": "(184, 79, 184)", 
+                            "id": "1", 
+                            "nickname": "Period1", 
+                            "status": "ON"
+                        }, 
+                        {
+                            "at": 1140, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "2", 
+                            "nickname": "Period2", 
+                            "status": "OFF"
+                        }, 
+                        {
+                            "at": 0, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "3", 
+                            "nickname": "Period3", 
+                            "status": "OFF"
+                        }
+                    ], 
+                    "saturday": [
+                        {
+                            "at": 420, 
+                            "brightness": 100, 
+                            "color": "(255, 255, 255)", 
+                            "id": "1", 
+                            "nickname": "Period1", 
+                            "status": "ON"
+                        }, 
+                        {
+                            "at": 1140, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "2", 
+                            "nickname": "Period2", 
+                            "status": "OFF"
+                        }
+                    ], 
+                    "sunday": [
+                        {
+                            "at": 420, 
+                            "brightness": 100, 
+                            "color": "(255, 255, 255)", 
+                            "id": "1", 
+                            "nickname": "Period1", 
+                            "status": "ON"
+                        }, 
+                        {
+                            "at": 1140, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "2", 
+                            "nickname": "Period2", 
+                            "status": "OFF"
+                        }
+                    ], 
+                    "thursday": [
+                        {
+                            "at": 420, 
+                            "brightness": 100, 
+                            "color": "(255, 255, 255)", 
+                            "id": "1", 
+                            "nickname": "Period1", 
+                            "status": "ON"
+                        }, 
+                        {
+                            "at": 1140, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "2", 
+                            "nickname": "Period2", 
+                            "status": "OFF"
+                        }
+                    ], 
+                    "tuesday": [
+                        {
+                            "at": 420, 
+                            "brightness": 100, 
+                            "color": "(255, 255, 255)", 
+                            "id": "1", 
+                            "nickname": "Period1", 
+                            "status": "ON"
+                        }, 
+                        {
+                            "at": 1140, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "2", 
+                            "nickname": "Period2", 
+                            "status": "OFF"
+                        }
+                    ], 
+                    "wednesday": [
+                        {
+                            "at": 420, 
+                            "brightness": 100, 
+                            "color": "(255, 255, 255)", 
+                            "id": "1", 
+                            "nickname": "Period1", 
+                            "status": "ON"
+                        }, 
+                        {
+                            "at": 1140, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "2", 
+                            "nickname": "Period2", 
+                            "status": "OFF"
+                        }
+                    ]
+                }, 
+                "holiday": {
+                    "holiday": [
+                        {
+                            "at": 420, 
+                            "brightness": 100, 
+                            "color": "(255, 255, 255)", 
+                            "id": "1", 
+                            "nickname": "Period1", 
+                            "status": "ON"
+                        }, 
+                        {
+                            "at": 1140, 
+                            "brightness": 0, 
+                            "color": "(255, 255, 255)", 
+                            "id": "2", 
+                            "nickname": "Period2", 
+                            "status": "OFF"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

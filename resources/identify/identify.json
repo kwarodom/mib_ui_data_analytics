@@ -1,0 +1,10 @@
+{
+    "identify_device_status_ambient_light_sensor": "DayLightSensor/'success'", 
+    "identify_device_status_lighting": "{update_number}/{status}", 
+    "identify_device_status_occupancy_sensor": "{update_number}/{status}", 
+    "identify_device_status_plugload": "{update_number}/{status}", 
+    "identify_device_status_power_meter": "{update_number}/{status}", 
+    "identify_device_status_rtu": "{update_number}/{status}", 
+    "identify_device_status_thermostat": "{update_number}/{status}", 
+    "identify_device_status_vav": "{update_number}/{status}"
+}

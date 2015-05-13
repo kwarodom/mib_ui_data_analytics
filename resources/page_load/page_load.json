@@ -236,13 +236,13 @@
     "thermostat": {
         "1NST18b43017e76a": {
             "page_load": {
-                "battery": 96, 
+                "battery": 100, 
                 "cool_setpoint": 71.0, 
                 "fan_mode": "AUTO", 
                 "fan_state": "AUTO", 
                 "heat_setpoint": 70, 
                 "override": false, 
-                "temperature": 77.4, 
+                "temperature": 75.4, 
                 "thermostat_mode": "COOL", 
                 "thermostat_state": "COOL"
             }

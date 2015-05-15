@@ -237,12 +237,25 @@
         "1NST18b43017e76a": {
             "page_load": {
                 "battery": 100, 
-                "cool_setpoint": 71.0, 
+                "cool_setpoint": 60.0, 
                 "fan_mode": "AUTO", 
                 "fan_state": "AUTO", 
                 "heat_setpoint": 70, 
                 "override": false, 
-                "temperature": 75.4, 
+                "temperature": 79.5, 
+                "thermostat_mode": "COOL", 
+                "thermostat_state": "COOL"
+            }
+        }, 
+        "1NST18b4302964f1": {
+            "page_load": {
+                "battery": 100, 
+                "cool_setpoint": 60.0, 
+                "fan_mode": "AUTO", 
+                "fan_state": "AUTO", 
+                "heat_setpoint": 70, 
+                "override": false, 
+                "temperature": 80.7, 
                 "thermostat_mode": "COOL", 
                 "thermostat_state": "COOL"
             }

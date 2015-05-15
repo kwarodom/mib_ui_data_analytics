@@ -46,7 +46,7 @@ import os
 import sys
 
 #DEBUG = True
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -252,7 +252,8 @@ INSTALLED_APPS = (
     'powermeter',
     'VAV',
     'RTU',
-    'tablib'
+    'tablib',
+    'weathersensor'
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

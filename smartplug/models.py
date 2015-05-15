@@ -56,6 +56,7 @@ class Plugload(models.Model):
     last_scanned_time = models.DateTimeField(null=True, blank=True)
     last_offline_time = models.DateTimeField(null=True, blank=True)
 
+
     class Meta:
         db_table = "plugload"
 

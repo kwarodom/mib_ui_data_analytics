@@ -48,6 +48,8 @@ import ast
 import re
 import time
 from alerts.views import get_notifications
+import urllib2
+from powerdb2.smap.models import Stream, Subscription, Metadata2
 
 from .models import Building_Zone
 from ZMQHelper.zmq_pub import ZMQ_PUB
@@ -56,6 +58,7 @@ from ZMQHelper import zmq_topics
 
 from .models import DeviceMetadata, Building_Zone, GlobalSetting
 from thermostat.models import Thermostat
+from weathersensor.models import weather_sensor
 from VAV.models import VAV
 from RTU.models import RTU
 from smartplug.models import Plugload
@@ -850,6 +853,66 @@ def bemoss_home(request):
     context = RequestContext(request)
     username = request.user
 
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111
+    mac = '18b4302964f1'
+    device_metadata = [ob.device_control_page_info() for ob in DeviceMetadata.objects.filter(mac_address=mac)]
+    print device_metadata
+    device_id = device_metadata[0]['device_id']
+    device_type_id = device_metadata[0]['device_model_id']
+    mac_address = device_metadata[0]['mac_address']
+    device_type_id = device_type_id.device_model_id
+    print device_type_id
+
+    device_status = [ob.data_as_json() for ob in Thermostat.objects.filter(thermostat_id=device_id)]
+    device_zone = device_status[0]['zone']['id']
+    device_nickname = device_status[0]['nickname']
+    zone_nickname = device_status[0]['zone']['zone_nickname']
+
+    device_info = str(device_zone) + '/thermostat/' + device_id
+    device_info = device_info.encode('ascii', 'ignore')
+    device_smap_tag = '/bemoss/' + str(device_zone) + '/thermostat/' + device_id
+    device_smap_tag = device_smap_tag.encode('ascii', 'ignore')
+    temperature = device_smap_tag + '/temperature'
+    heat_setpoint = device_smap_tag + '/heat_setpoint'
+    cool_setpoint = device_smap_tag + '/cool_setpoint'
+    print temperature
+
+    _uuid_temperature = get_uuid_for_data_point(temperature)
+    _uuid_heat_setpoint = get_uuid_for_data_point(heat_setpoint)
+    _uuid_cool_setpoint = get_uuid_for_data_point(cool_setpoint)
+
+    zones = [ob.as_json() for ob in Building_Zone.objects.all()]
+    thermostats_sn = [ob.data_side_nav() for ob in Thermostat.objects.filter(network_status='ONLINE', thermostat_id__bemoss=True)]
+    vav_sn = [ob.data_side_nav() for ob in VAV.objects.filter(network_status='ONLINE', vav_id__bemoss=True)]
+    rtu_sn = [ob.data_side_nav() for ob in RTU.objects.filter(network_status='ONLINE', rtu_id__bemoss=True)]
+    lighting_sn = [ob.data_side_nav() for ob in Lighting.objects.filter(network_status='ONLINE', lighting_id__bemoss=True)]
+    plugload_sn = [ob.data_side_nav() for ob in Plugload.objects.filter(network_status='ONLINE', plugload_id__bemoss=True)]
+    occ_sensors_sn = [ob.data_side_nav() for ob in OccupancySensor.objects.filter(network_status='ONLINE', occupancy_sensor_id__bemoss=True)]
+    lt_sensors_sn = [ob.data_side_nav() for ob in AmbientLightSensor.objects.filter(network_status='ONLINE', ambient_light_sensor_id__bemoss=True)]
+    mtn_sensors_sn = [ob.data_side_nav() for ob in MotionSensor.objects.filter(network_status='ONLINE', motion_sensor_id__bemoss=True)]
+    powermeters_sn = [ob.data_side_nav() for ob in PowerMeter.objects.filter(network_status='ONLINE', power_meter_id__bemoss=True)]
+    active_al = get_notifications()
+    context.update({'active_al':active_al})
+    context.update({
+        'zones': zones, 'thermostat_sn': thermostats_sn,
+         'lighting_sn': lighting_sn, 'plugload_sn': plugload_sn, 'occ_sensors_sn': occ_sensors_sn,
+         'lt_sensors_sn': lt_sensors_sn, 'mtn_sensors_sn': mtn_sensors_sn,  'powermeters_sn': powermeters_sn,
+         'vav_sn': vav_sn, 'rtu_sn': rtu_sn
+        })
+
+    rs_temperature = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_temperature)
+    rs_heat_setpoint = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_heat_setpoint)
+    rs_cool_setpoint = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_cool_setpoint)
+
+    # return render_to_response(
+    #     'statistics/statistics_thermostat.html',
+    #     {'temperature': rs_temperature, 'heat_setpoint': rs_heat_setpoint, 'cool_setpoint': rs_cool_setpoint,
+    #       'device_info': device_info, 'mac': mac_address,
+    #      'nickname': device_nickname,
+    #      'zone_nickname': zone_nickname},
+    #     context)
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111
+
     zones = [ob.as_json() for ob in Building_Zone.objects.all()]
     thermostats_sn = [ob.data_side_nav() for ob in Thermostat.objects.filter(network_status='ONLINE',
                                                                              thermostat_id__bemoss=True)]
@@ -923,7 +986,9 @@ def bemoss_home(request):
 
     return render_to_response(
         'dashboard/dashboard.html',
-        {'zones_p': zones_p}, context)
+        {'zones_p': zones_p, 'temperature': rs_temperature, 'heat_setpoint': rs_heat_setpoint, 'cool_setpoint': rs_cool_setpoint,
+          'device_info': device_info, 'mac': mac_address,
+         'nickname': device_nickname, 'zone_nickname': zone_nickname}, context)
 
 
 @login_required(login_url='/login/')
@@ -1081,6 +1146,8 @@ def zone_device_all_listing(request, zone_dev):
     zones = [ob.as_json() for ob in Building_Zone.objects.all()]
     thermostats_sn = [ob.data_side_nav() for ob in Thermostat.objects.filter(network_status='ONLINE',
                                                                              thermostat_id__bemoss=True)]
+    # weather_sensors_sn = [ob.data_side_nav() for ob in weather_sensor.objects.filter(network_status='ONLINE',
+    #                                                                          weather_sensor_id__bemoss=True)]
     vav_sn = [ob.data_side_nav() for ob in VAV.objects.filter(network_status='ONLINE', vav_id__bemoss=True)]
     rtu_sn = [ob.data_side_nav() for ob in RTU.objects.filter(network_status='ONLINE', rtu_id__bemoss=True)]
     lighting_sn = [ob.data_side_nav() for ob in Lighting.objects.filter(network_status='ONLINE',
@@ -1110,6 +1177,10 @@ def zone_device_all_listing(request, zone_dev):
     if len(thermostats) != 0:
         zone_nickname = thermostats[0]['zone']['zone_nickname']
     #print thermostats
+
+    # weather_sensors = [ob.data_as_json() for ob in weather_sensor.objects.filter(zone_id=zone_id, weather_sensor_id__bemoss=True)]
+    # if len(weather_sensors) != 0:
+    #     zone_nickname = weather_sensors[0]['zone']['zone_nickname']
 
     rtu = [ob.as_json() for ob in RTU.objects.filter(zone_id=zone_id, rtu_id__bemoss=True)]
     if len(rtu) != 0:
@@ -1306,6 +1377,120 @@ def modify_sensors(request):
 
     if request.is_ajax():
         return HttpResponse(json.dumps("success"), mimetype='application/json')
+
+
+def get_uuid_for_data_point(tagval):
+    metadata = Metadata2.objects.using('smap').filter(tagval=tagval)
+    stream_id = metadata[0].stream_id
+    print stream_id
+    stream_object = Stream.objects.using('smap').filter(id=stream_id)
+    _uuid = stream_object[0].uuid
+    print _uuid
+    return _uuid.encode('ascii', 'ignore')
+
+def get_data_from_smap(url):
+    rs = urllib2.urlopen(url)
+
+    json_string = rs.read()
+    parsed_json = json.loads(json_string)
+    parsed_json = parsed_json[0]['Readings']
+    return parsed_json
+
+@login_required(login_url='/login/')
+def smap_plot_thermostat(request, mac):
+    """Page load definition for thermostat statistics."""
+    print "inside smap view method"
+    context = RequestContext(request)
+    if request.method == 'GET':
+
+        device_metadata = [ob.device_control_page_info() for ob in DeviceMetadata.objects.filter(mac_address=mac)]
+        print device_metadata
+        device_id = device_metadata[0]['device_id']
+        device_type_id = device_metadata[0]['device_model_id']
+        mac_address = device_metadata[0]['mac_address']
+        device_type_id = device_type_id.device_model_id
+        print device_type_id
+
+        device_status = [ob.data_as_json() for ob in Thermostat.objects.filter(thermostat_id=device_id)]
+        device_zone = device_status[0]['zone']['id']
+        device_nickname = device_status[0]['nickname']
+        zone_nickname = device_status[0]['zone']['zone_nickname']
+
+        device_info = str(device_zone) + '/thermostat/' + device_id
+        device_info = device_info.encode('ascii', 'ignore')
+        device_smap_tag = '/bemoss/' + str(device_zone) + '/thermostat/' + device_id
+        device_smap_tag = device_smap_tag.encode('ascii', 'ignore')
+        temperature = device_smap_tag + '/temperature'
+        heat_setpoint = device_smap_tag + '/heat_setpoint'
+        cool_setpoint = device_smap_tag + '/cool_setpoint'
+        print temperature
+
+        _uuid_temperature = get_uuid_for_data_point(temperature)
+        _uuid_heat_setpoint = get_uuid_for_data_point(heat_setpoint)
+        _uuid_cool_setpoint = get_uuid_for_data_point(cool_setpoint)
+
+        zones = [ob.as_json() for ob in Building_Zone.objects.all()]
+        thermostats_sn = [ob.data_side_nav() for ob in Thermostat.objects.filter(network_status='ONLINE', thermostat_id__bemoss=True)]
+        vav_sn = [ob.data_side_nav() for ob in VAV.objects.filter(network_status='ONLINE', vav_id__bemoss=True)]
+        rtu_sn = [ob.data_side_nav() for ob in RTU.objects.filter(network_status='ONLINE', rtu_id__bemoss=True)]
+        lighting_sn = [ob.data_side_nav() for ob in Lighting.objects.filter(network_status='ONLINE', lighting_id__bemoss=True)]
+        plugload_sn = [ob.data_side_nav() for ob in Plugload.objects.filter(network_status='ONLINE', plugload_id__bemoss=True)]
+        occ_sensors_sn = [ob.data_side_nav() for ob in OccupancySensor.objects.filter(network_status='ONLINE', occupancy_sensor_id__bemoss=True)]
+        lt_sensors_sn = [ob.data_side_nav() for ob in AmbientLightSensor.objects.filter(network_status='ONLINE', ambient_light_sensor_id__bemoss=True)]
+        mtn_sensors_sn = [ob.data_side_nav() for ob in MotionSensor.objects.filter(network_status='ONLINE', motion_sensor_id__bemoss=True)]
+        powermeters_sn = [ob.data_side_nav() for ob in PowerMeter.objects.filter(network_status='ONLINE', power_meter_id__bemoss=True)]
+        active_al = get_notifications()
+        context.update({'active_al':active_al})
+        context.update({
+            'zones': zones, 'thermostat_sn': thermostats_sn,
+             'lighting_sn': lighting_sn, 'plugload_sn': plugload_sn, 'occ_sensors_sn': occ_sensors_sn,
+             'lt_sensors_sn': lt_sensors_sn, 'mtn_sensors_sn': mtn_sensors_sn,  'powermeters_sn': powermeters_sn,
+             'vav_sn': vav_sn, 'rtu_sn': rtu_sn
+            })
+
+        rs_temperature = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_temperature)
+        rs_heat_setpoint = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_heat_setpoint)
+        rs_cool_setpoint = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_cool_setpoint)
+
+        return render_to_response(
+            'statistics/statistics_thermostat.html',
+            {'temperature': rs_temperature, 'heat_setpoint': rs_heat_setpoint, 'cool_setpoint': rs_cool_setpoint,
+              'device_info': device_info, 'mac': mac_address,
+             'nickname': device_nickname,
+             'zone_nickname': zone_nickname},
+            context)
+
+@login_required(login_url='/login/')
+def auto_update_smap_thermostat(request):
+    if request.method == 'POST':
+        print 'inside smap auto update thermostat'
+        _data = request.body
+        _data = json.loads(_data)
+        device_info = _data['device_info']
+
+        device_smap_tag = '/bemoss/' + device_info.encode('ascii', 'ignore')
+        device_smap_tag = device_smap_tag.encode('ascii', 'ignore')
+        temperature = device_smap_tag + '/temperature'
+        heat_setpoint = device_smap_tag + '/heat_setpoint'
+        cool_setpoint = device_smap_tag + '/cool_setpoint'
+
+        _uuid_temperature = get_uuid_for_data_point(temperature)
+        _uuid_heat_setpoint = get_uuid_for_data_point(heat_setpoint)
+        _uuid_cool_setpoint = get_uuid_for_data_point(cool_setpoint)
+
+        rs_temperature = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_temperature)
+        rs_heat_setpoint = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_heat_setpoint)
+        rs_cool_setpoint = get_data_from_smap("http://localhost/backend/api/data/uuid/" + _uuid_cool_setpoint)
+
+        json_result = {
+            'temperature': rs_temperature,
+            'heat_setpoint': rs_heat_setpoint,
+            'cool_setpoint': rs_cool_setpoint
+        }
+
+        print 'test'
+        if request.is_ajax():
+                return HttpResponse(json.dumps(json_result), mimetype='application/json')
 
 
 

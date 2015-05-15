@@ -458,6 +458,356 @@ Address all correspondence regarding this license to Virginia Tech's electronic 
 
         </div>
       </div>
+
+{#    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
+     <div class="row" id="#unassigned_devices_th">
+
+        <div class="col-lg-12">
+
+          <div class="widget">
+            <div class="widget-header"> <i class="icon-cog"></i>
+              <h3>Weather Sensor</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content connectedSortable" id="sortable1">
+                <div class="brand pull-right"> <a href="/home/"><img src="/static/images/netatmo.png" width="210" height="240"></a></div>
+              <!-- <div class="shortcuts"> -->
+               {%for th in thermostats %}
+                    <div class="col-md-3 col-xs-12 col-sm-6 device_view" id="{{th.id}}_divopen" style="height:280px;">
+                    <a href="/tstat_2/{{th.mac_address}}" class="stats-container">
+                      <div class="stats-heading" id="{{th.id}}_nickname_header">{{th.nickname}}</div>
+                      <div class="stats-body-alt" >
+                        <h2></h2>
+                        <!--<div id="preview">
+                        <div class="text-center">
+                        <canvas class="thermo_gauge" id="gauge_{{th.id}}" width=150 height=100></canvas>
+                        <div id="{{th.id}}-textfield" style = "margin-top: -90px;"></div>
+                        </div>
+                        <div class="text-center">
+                        <div id="unit" style = "font-size:12px; margin-top: 0px;">&deg;F</div>
+                        <div class="text-center">	<h4 id="{{th.id}}_chvalue">{{th.temperature}}</h4>
+                        <h4 style = "font-size:12.7px; margin-top: 16.5px;" id="{{th.id}}_tmode">{{th.thermostat_mode}}</h4></div>
+                        </div>
+                    </div>-->
+                      <div class="text-center h5">{{ th.thermostat_mode }}</div>
+                      <div class="text-center"><span class="h1">{{ th.temperature }}&deg;F</span></div>
+                        <div class="text-center" style = "margin-top: 20px;"><h5>{{th.device_type|replace_|capfirst }}</h5>	</div>
+                          {% ifequal th.thermostat_mode 'HEAT' %}
+                            <div class="text-center"><h5>Set Point:{{th.heat_setpoint}}&deg;F</h5></div>
+                          {% else %}
+                            <div class="text-center"><h5>Set Point:{{th.cool_setpoint}}&deg;F</h5></div>
+                          {% endifequal %}
+                      {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                          {% if th.identifiable %}
+                         <div class="text-center" style="height: 23px;"> <button class="btn btn-warning btn-xs identify"
+                                style="margin-top: -40px; margin-bottom: 7px" id="identify-{{ th.id }}"><i class="icon-search" id="{{ th.id }}-spin"></i> Identify Device</button></div>
+                            {% endif %}
+                        {% endifequal %}
+                        </div>
+                              <div class="stats-footer text-center" data-backdrop="false" data-target="#{{ th.id }}" data-toggle="modal">View/Edit Information</div>
+                        </a>
+                        </div>
+
+
+
+              	<div style="display: none;" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="modal fade" id="{{ th.id }}">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">x</button>
+                        <h4 id="myModalLabel" class="modal-title">{{th.nickname}} Information</h4>
+                      </div>
+                      <div class="modal-body">
+                         <table class="table table-condensed">
+			                <thead>
+				                <tr>
+				                <th></th>
+				                <th></th>
+				                <th></th>
+			                	</tr>
+			                </thead>
+			                <tbody>
+			                  <tr>
+			                    <td>Device Nickname</td>
+			                    <td id="{{th.id}}_nick">{{th.nickname}}</td>
+			                    <td>{% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                                    <a href="javascript:;" class="nickname_edit" ><i class="icon-small icon-edit" id="{{th.id}}_nick_edit"></i></a>
+                                {% endifequal %}</td>
+			                    <script>
+                                    {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+			                    $( "#{{th.id}}_nick_edit" ).click(function() {
+			                    	//alert("testing");
+			                    	var newtest = document.getElementById(this.id.replace("_edit",""));
+			                    	newtest.innerHTML = '<input type="text" id="{{th.id}}_nickname" placeholder="{{th.nickname}}"></input>'
+			                    });
+                                    {% endifequal %}
+			                    </script>
+			                  </tr>
+			                  <tr>
+			                    <td>Zone</td>
+			                    <td>{{th.zone.zone_nickname}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                    <td>Device Type	</td>
+			                    <td>{{th.device_type|replace_|capfirst}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                    <td>Vendor Name</td>
+			                    <td>{{th.vendor_name}}</td>
+			                    <td></td>
+			                  </tr>
+                              <tr>
+			                    <td>Device Model</td>
+			                    <td>{{th.device_model}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                  	<td>MAC Address</td>
+			                    <td>{{th.mac_address}}</td>
+			                    <td></td>
+			                  </tr>
+			                </tbody>
+			              </table>
+			              <!--<p class = "attribution">To assign a <em>Zone</em> to your device, drag your device to the corresponding zone.</p>-->
+                          <p class = "attribution">The nickname should contain 6 to 10 characters (alphabets/numbers). No spaces or special characters.</p>
+                          <p class = "attribution" id="viewediterror_{{th.id}}" style="color:red;"></p>
+                      </div>
+                      <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                           {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                        <button class="btn btn-primary save_changes" id="#savechanges-{{th.id}}-{{ th.device_model_id }}" type="button">Save changes</button>
+                      {% endifequal %}
+                      </div>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+
+               {% endfor %}
+            {%for vav_this in vav %}
+                    <div class="col-md-3 col-xs-12 col-sm-6 device_view" id="{{vav_this.id}}_divopen" style="height:280px;">
+                    <a href="/vav/{{vav_this.mac_address}}" class="stats-container">
+                      <div class="stats-heading" id="{{vav_this.id}}_nickname_header">{{vav_this.nickname}}</div>
+                      <div class="stats-body-alt"
+                           style="height:197px;"
+
+                              >
+
+                      <div class="text-center"><h1 style="margin-top: -20px;"><img src="/static/images/vav_on.png" width="150" height="150" ></h1></div>
+                            <div class="text-center"><h5>Flap Position: {{vav_this.flap_position}} %</h5></div>
+                      {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                          {% if vav_this.identifiable %}
+                         <div class="text-center" style="height: 23px;"> <button class="btn btn-warning btn-xs identify"
+                                style="margin-top: -40px; margin-bottom: 7px" id="identify-{{ vav_this.id }}"><i class="icon-search" id="{{ vav_this.id }}-spin"></i> Identify Device</button></div>
+
+                          {% endif %}
+
+                        {% endifequal %}
+                        </div>
+                              <div class="stats-footer text-center" data-backdrop="false" data-target="#{{ vav_this.id }}" data-toggle="modal">View/Edit Information</div>
+                        </a>
+                        </div>
+
+
+
+              	<div style="display: none;" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="modal fade" id="{{ vav_this.id }}">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">x</button>
+                        <h4 id="myModalLabel" class="modal-title">{{vav_this.nickname}} Information</h4>
+                      </div>
+                      <div class="modal-body">
+                         <table class="table table-condensed">
+			                <thead>
+				                <tr>
+				                <th></th>
+				                <th></th>
+				                <th></th>
+			                	</tr>
+			                </thead>
+			                <tbody>
+			                  <tr>
+			                    <td>Device Nickname</td>
+			                    <td id="{{vav_this.id}}_nick">{{vav_this.nickname}}</td>
+			                    <td>{% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                                    <a href="javascript:;" class="nickname_edit" ><i class="icon-small icon-edit" id="{{vav_this.id}}_nick_edit"></i></a>
+                                {% endifequal %}</td>
+			                    <script>
+                                    {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+			                    $( "#{{vav_this.id}}_nick_edit" ).click(function() {
+			                    	//alert("testing");
+			                    	var newtest = document.getElementById(this.id.replace("_edit",""));
+			                    	newtest.innerHTML = '<input type="text" id="{{vav_this.id}}_nickname" placeholder="{{vav_this.nickname}}"></input>'
+			                    });
+                                    {% endifequal %}
+			                    </script>
+			                  </tr>
+			                  <tr>
+			                    <td>Zone</td>
+			                    <td>{{vav_this.zone.zone_nickname}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                    <td>Device Type	</td>
+			                    <td>{{vav_this.device_type|replace_|capfirst}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                    <td>Vendor Name</td>
+			                    <td>{{vav_this.vendor_name}}</td>
+			                    <td></td>
+			                  </tr>
+                              <tr>
+			                    <td>Device Model</td>
+			                    <td>{{vav_this.device_model}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                  	<td>MAC Address</td>
+			                    <td>{{vav_this.mac_address}}</td>
+			                    <td></td>
+			                  </tr>
+			                </tbody>
+			              </table>
+			              <!--<p class = "attribution">To assign a <em>Zone</em> to your device, drag your device to the corresponding zone.</p>-->
+                          <p class = "attribution">The nickname should contain 6 to 10 characters (alphabets/numbers). No spaces or special characters.</p>
+                          <p class = "attribution" id="viewediterror_{{vav_this.id}}" style="color:red;"></p>
+                      </div>
+                      <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                           {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                        <button class="btn btn-primary save_changes" id="#savechanges-{{vav_this.id}}-{{ vav_this.device_model_id }}" type="button">Save changes</button>
+                      {% endifequal %}
+                      </div>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+
+               {% endfor %}
+               {%for rtu_this in rtu %}
+                    <div class="col-md-3 col-xs-12 col-sm-6 device_view" id="{{rtu_this.id}}_divopen" style="height:280px;">
+                    <a href="/rtu/{{rtu_this.mac_address}}" class="stats-container">
+                      <div class="stats-heading" id="{{rtu_this.id}}_nickname_header">{{rtu_this.nickname}}</div>
+                      <div class="stats-body-alt"
+                           style="height:197px;">
+
+                      <div class="text-center"><h1 style="margin-top: 7px;"><img src="/static/images/rtu_on.png" width="100" height="100" ></h1></div>
+                            <div class="text-center"><h5
+                                    {% if rtu_this.identifiable|is_false %}
+                                        style="margin-top: 30px;"
+                                    {% endif %}
+                                    >Heat Set Point: {{rtu_this.heat_setpoint}} &deg;F</h5></div>
+                      <div class="text-center"><h5>Cool Set Point: {{rtu_this.cool_setpoint}} &deg;F</h5></div>
+                      {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                          {% if rtu_this.identifiable %}
+                         <div class="text-center" style="height: 23px;"> <button class="btn btn-warning btn-xs identify"
+                                style="margin-top: -40px; margin-bottom: 7px" id="identify-{{ rtu_this.id }}"><i class="icon-search" id="{{ rtu_this.id }}-spin"></i> Identify Device</button></div>
+
+                          {% endif %}
+
+                        {% endifequal %}
+                        </div>
+                              <div class="stats-footer text-center" data-backdrop="false" data-target="#{{ rtu_this.id }}" data-toggle="modal">View/Edit Information</div>
+                        </a>
+                        </div>
+
+
+
+              	<div style="display: none;" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="modal fade" id="{{ rtu_this.id }}">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">x</button>
+                        <h4 id="myModalLabel" class="modal-title">{{rtu_this.nickname}} Information</h4>
+                      </div>
+                      <div class="modal-body">
+                         <table class="table table-condensed">
+			                <thead>
+				                <tr>
+				                <th></th>
+				                <th></th>
+				                <th></th>
+			                	</tr>
+			                </thead>
+			                <tbody>
+			                  <tr>
+			                    <td>Device Nickname</td>
+			                    <td id="{{rtu_this.id}}_nick">{{rtu_this.nickname}}</td>
+			                    <td>{% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                                    <a href="javascript:;" class="nickname_edit" ><i class="icon-small icon-edit" id="{{rtu_this.id}}_nick_edit"></i></a>
+                                {% endifequal %}</td>
+			                    <script>
+                                    {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+			                    $( "#{{rtu_this.id}}_nick_edit" ).click(function() {
+			                    	//alert("testing");
+			                    	var newtest = document.getElementById(this.id.replace("_edit",""));
+			                    	newtest.innerHTML = '<input type="text" id="{{rtu_this.id}}_nickname" placeholder="{{rtu_this.nickname}}"></input>'
+			                    });
+                                    {% endifequal %}
+			                    </script>
+			                  </tr>
+			                  <tr>
+			                    <td>Zone</td>
+			                    <td>{{rtu_this.zone.zone_nickname}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                    <td>Device Type	</td>
+			                    <td>{{rtu_this.device_type|replace_|capfirst}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                    <td>Vendor Name</td>
+			                    <td>{{rtu_this.vendor_name}}</td>
+			                    <td></td>
+			                  </tr>
+                              <tr>
+			                    <td>Device Model</td>
+			                    <td>{{rtu_this.device_model}}</td>
+			                    <td></td>
+			                  </tr>
+			                  <tr>
+			                  	<td>MAC Address</td>
+			                    <td>{{rtu_this.mac_address}}</td>
+			                    <td></td>
+			                  </tr>
+			                </tbody>
+			              </table>
+			              <!--<p class = "attribution">To assign a <em>Zone</em> to your device, drag your device to the corresponding zone.</p>-->
+                          <p class = "attribution">The nickname should contain 6 to 10 characters (alphabets/numbers). No spaces or special characters.</p>
+                          <p class = "attribution" id="viewediterror_{{rtu_this.id}}" style="color:red;"></p>
+                      </div>
+                      <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                           {% ifequal request.user.get_profile.group.name|lower  'admin' %}
+                        <button class="btn btn-primary save_changes" id="#savechanges-{{rtu_this.id}}-{{ rtu_this.device_model_id }}" type="button">Save changes</button>
+                      {% endifequal %}
+                      </div>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+
+               {% endfor %}
+             	<!-- </div> -->
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+
+        </div>
+      </div>
+
+
+{#    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
+
    <div class="row" id="#unassigned_devices_lt">
 
         <div class="col-lg-12">
@@ -1359,7 +1709,7 @@ Address all correspondence regarding this license to Virginia Tech's electronic 
 
 </div>
 
-<div class="bottom-nav footer"> 2015 &copy; MiB. </div>
+<div class="bottom-nav footer"> 2015 &copy; MiB Automations. </div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="/static/js/jquery.js"></script>

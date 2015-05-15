@@ -78,6 +78,7 @@ urlpatterns = patterns('',
     #wifithermostat3m50
     #(r'^wifi3m50/$', 'wifithermostat_3m50.views.wifithermo3m50'),
     (r'^tstat/(?P<mac>[a-zA-Z0-9]+)/$', 'thermostat.views.thermostat'),
+    (r'^tstat_2/(?P<mac>[a-zA-Z0-9]+)/$', 'weathersensor.views.weather_sensor'),
     #wifithermostat3m50-submitdata
     #(r'^submitdata/$', 'wifithermostat_3m50.views.submitvalues'),
     #(r'^submitdata3m50/$', 'wifithermostat_3m50.views.submitvalues'),
@@ -220,6 +221,8 @@ urlpatterns = patterns('',
     (r'^change_zones_lite/$', 'dashboard.views.change_zones_lite'),
     #home page (new dashboard)
     (r'^home/$', 'dashboard.views.bemoss_home'),
+    #(r'^home/$', 'tsvisual.views.smap_plot_thermostat'),
+    (r'^home/(?P<mac>18b43017e76a+)$', 'dashboard.views.bemoss_home'),
     #change global settings
     (r'^change_global_settings/$', 'dashboard.views.change_global_settings'),
     #dashboard_devices_in_zone

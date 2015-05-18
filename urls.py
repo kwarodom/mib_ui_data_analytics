@@ -261,6 +261,10 @@ urlpatterns = patterns('',
     (r'^report_plschd/(?P<mac>[a-zA-Z0-9]+)$', 'reports.views.export_schedule_plugload_daily'),
     (r'^report_plschh/(?P<mac>[a-zA-Z0-9]+)$', 'reports.views.export_schedule_plugload_holiday'),
     (r'^export/(?P<mac>[a-zA-Z0-9]+)$', 'reports.views.export_smap_data_to_spreadsheet'),
+
+    (r'^energy_dracula/(?P<mac>[a-zA-Z0-9]+)$', 'energygame.views.smap_plot_thermostat')
+
+
 )
 
 #handler404 = 'error.views.error404'    

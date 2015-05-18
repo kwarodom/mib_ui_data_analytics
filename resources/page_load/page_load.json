@@ -255,7 +255,7 @@
                 "fan_state": "AUTO", 
                 "heat_setpoint": 70, 
                 "override": false, 
-                "temperature": 80.7, 
+                "temperature": 77.9, 
                 "thermostat_mode": "COOL", 
                 "thermostat_state": "COOL"
             }

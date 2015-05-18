@@ -472,7 +472,7 @@ Address all correspondence regarding this license to Virginia Tech's electronic 
             <div class="widget-content connectedSortable" id="sortable1">
                 <div class="brand pull-right"> <a href="/home/"><img src="/static/images/netatmo.png" width="210" height="240"></a></div>
               <!-- <div class="shortcuts"> -->
-               {%for th in thermostats %}
+               {%for th in weather_sensors %}
                     <div class="col-md-3 col-xs-12 col-sm-6 device_view" id="{{th.id}}_divopen" style="height:280px;">
                     <a href="/tstat_2/{{th.mac_address}}" class="stats-container">
                       <div class="stats-heading" id="{{th.id}}_nickname_header">{{th.nickname}}</div>
@@ -492,11 +492,11 @@ Address all correspondence regarding this license to Virginia Tech's electronic 
                       <div class="text-center h5">{{ th.thermostat_mode }}</div>
                       <div class="text-center"><span class="h1">{{ th.temperature }}&deg;F</span></div>
                         <div class="text-center" style = "margin-top: 20px;"><h5>{{th.device_type|replace_|capfirst }}</h5>	</div>
-                          {% ifequal th.thermostat_mode 'HEAT' %}
-                            <div class="text-center"><h5>Set Point:{{th.heat_setpoint}}&deg;F</h5></div>
-                          {% else %}
-                            <div class="text-center"><h5>Set Point:{{th.cool_setpoint}}&deg;F</h5></div>
-                          {% endifequal %}
+{#                          {% ifequal th.thermostat_mode 'HEAT' %}#}
+{#                            <div class="text-center"><h5>Set Point:{{th.heat_setpoint}}&deg;F</h5></div>#}
+{#                          {% else %}#}
+{#                            <div class="text-center"><h5>Set Point:{{th.cool_setpoint}}&deg;F</h5></div>#}
+{#                          {% endifequal %}#}
                       {% ifequal request.user.get_profile.group.name|lower  'admin' %}
                           {% if th.identifiable %}
                          <div class="text-center" style="height: 23px;"> <button class="btn btn-warning btn-xs identify"

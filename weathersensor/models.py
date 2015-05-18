@@ -63,8 +63,9 @@ class weather_sensor(models.Model):
     outdoor_max_temp = models.FloatField(null=True, blank=True)
     outdoor_min_temp = models.FloatField(null=True, blank=True)
     ip_address = models.IPAddressField(null=True, blank=True)
+    zone = models.ForeignKey(Building_Zone, null=True, blank=True)
     nickname = models.CharField(max_length=30)
-    zone_id = models.IntegerField()
+    #zone_id = models.IntegerField()
     network_status = models.CharField(max_length=7)
     other_parameters = models.CharField(max_length=200)
     last_scanned_time = models.DateTimeField(null=True, blank=True)
@@ -102,7 +103,6 @@ class weather_sensor(models.Model):
             outdoor_date_min_temp=self.outdoor_date_min_temp,
             outdoor_max_temp=self.outdoor_max_temp,
             outdoor_min_temp=self.outdoor_min_temp,
-
             device_model_id=metadata['device_model_id'],
             device_type=metadata['device_type'].encode('utf-8'),
             identifiable=metadata['identifiable'],

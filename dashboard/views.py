@@ -1146,8 +1146,7 @@ def zone_device_all_listing(request, zone_dev):
     zones = [ob.as_json() for ob in Building_Zone.objects.all()]
     thermostats_sn = [ob.data_side_nav() for ob in Thermostat.objects.filter(network_status='ONLINE',
                                                                              thermostat_id__bemoss=True)]
-    # weather_sensors_sn = [ob.data_side_nav() for ob in weather_sensor.objects.filter(network_status='ONLINE',
-    #                                                                          weather_sensor_id__bemoss=True)]
+    weather_sensors_sn = [ob.data_side_nav() for ob in weather_sensor.objects.filter(network_status='ONLINE')]
     vav_sn = [ob.data_side_nav() for ob in VAV.objects.filter(network_status='ONLINE', vav_id__bemoss=True)]
     rtu_sn = [ob.data_side_nav() for ob in RTU.objects.filter(network_status='ONLINE', rtu_id__bemoss=True)]
     lighting_sn = [ob.data_side_nav() for ob in Lighting.objects.filter(network_status='ONLINE',
@@ -1168,7 +1167,7 @@ def zone_device_all_listing(request, zone_dev):
         'zones': zones, 'thermostat_sn': thermostats_sn,
          'lighting_sn': lighting_sn, 'plugload_sn': plugload_sn, 'occ_sensors_sn': occ_sensors_sn,
          'lt_sensors_sn': lt_sensors_sn, 'mtn_sensors_sn': mtn_sensors_sn,  'powermeters_sn': powermeters_sn,
-         'vav_sn': vav_sn, 'rtu_sn': rtu_sn
+         'vav_sn': vav_sn, 'rtu_sn': rtu_sn, 'weather_sensors_sn' :weather_sensors_sn
     })
 
     #For the page
@@ -1178,9 +1177,9 @@ def zone_device_all_listing(request, zone_dev):
         zone_nickname = thermostats[0]['zone']['zone_nickname']
     #print thermostats
 
-    # weather_sensors = [ob.data_as_json() for ob in weather_sensor.objects.filter(zone_id=zone_id, weather_sensor_id__bemoss=True)]
-    # if len(weather_sensors) != 0:
-    #     zone_nickname = weather_sensors[0]['zone']['zone_nickname']
+    weather_sensors = [ob.data_as_json() for ob in weather_sensor.objects.filter(zone_id=zone_id, weather_sensor_id__bemoss=True)]
+    if len(weather_sensors) != 0:
+         zone_nickname = weather_sensors[0]['zone']['zone_nickname']
 
     rtu = [ob.as_json() for ob in RTU.objects.filter(zone_id=zone_id, rtu_id__bemoss=True)]
     if len(rtu) != 0:
@@ -1226,7 +1225,7 @@ def zone_device_all_listing(request, zone_dev):
         'dashboard/zone_devices_all.html',
         {'thermostats': thermostats, 'vav': vav, 'rtu': rtu, 'lighting_loads': lighting,
          'plugloads': plugloads, 'occ_sensors':occ_sensors, 'lt_sensors': lt_sensors,
-         'm_sensors': m_sensors, 'powermeters': pm, 'zone_id': zone_id, 'zone_nickname': zone_nickname,
+         'm_sensors': m_sensors, 'powermeters': pm, 'weather_sensors': weather_sensors, 'zone_id': zone_id, 'zone_nickname': zone_nickname,
          }, context)
 
 @login_required(login_url='/login/')

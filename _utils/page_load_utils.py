@@ -47,6 +47,7 @@ from lighting.models import Lighting
 from smartplug.models import Plugload
 from sensor.models import OccupancySensor, AmbientLightSensor, MotionSensor
 from powermeter.models import PowerMeter
+from weathersensor.models import weather_sensor
 import json
 import os
 import settings
@@ -111,6 +112,25 @@ def access_database_page_load(device_id, device_type_id):
             'fan_mode': status[0]['fan_mode'],
             'battery': status[0]['battery'],
             'override': status[0]['override']
+        }
+    elif device_type_id == '4NWS':
+        status = [ob.data_as_json() for ob in weather_sensor.objects.filter(weather_sensor_id=device_id)]
+        _status = {
+            'noise': status[0]['noise'],
+            'temperature': status[0]['temperature'],
+            'humidity': status[0]['humidity'],
+            'pressure': status[0]['pressure'],
+            'co2': status[0]['co2'],
+            'date_max_temp': status[0]['date_max_temp'],
+            'date_min_temp': status[0]['date_min_temp'],
+            'max_temp': status[0]['max_temp'],
+            'min_temp': status[0]['min_temp'],
+            'outdoor_temperature': status[0]['outdoor_temperature'],
+            'outdor_humidity': status[0]['outdor_humidity'],
+            'outdoor_date_max_temp': status[0]['outdoor_date_max_temp'],
+            'outdoor_date_min_temp': status[0]['outdoor_date_min_temp'],
+            'outdoor_max_temp': status[0]['outdoor_max_temp'],
+            'outdoor_min_temp': status[0]['outdoor_min_temp'],
         }
     elif device_type_id == '1RTU':
         status = [ob.as_json() for ob in RTU.objects.filter(rtu_id=device_id)]

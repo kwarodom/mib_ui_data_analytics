@@ -109,7 +109,7 @@ Address all correspondence regarding this license to Virginia Tech's electronic 
       </div>
         <div class="row">
             <div class="col-md-6 col-xs-12 col-sm-6">
-            {% if device_type_id != '1NST' %} <br/><br/><br/>{% endif %}
+            {% if device_type_id != '4NWS' %} <br/><br/><br/>{% endif %}
                 <a href="#" class="stats-container" >
               <div class="stats-heading">Outdoor Temperature</div>
               <div class="stats-body-alt" >
@@ -117,12 +117,12 @@ Address all correspondence regarding this license to Virginia Tech's electronic 
               </div>
               </a>
 
-              </a> {% endif %}
-            {% if device_type_id != '1NST' %} <br/><br/><br/>{% endif %}
+              </a>
+            {% if device_type_id != '4NWS' %} <br/><br/><br/>{% endif %}
                 <a href="#" class="stats-container" >
-              <div class="stats-heading">Indoor Temperature</div>
+              <div class="stats-heading">Outdoor Humidity</div>
               <div class="stats-body-alt" >
-                <div class="text-center"><span class="h1" id="indoor_temp">{{ device_data.temperature }}</span><span class="h1">&deg;F</span></div>
+                <div class="text-center"><span class="h1" id="outdor_humidity">{{ device_data.outdor_humidity }}</span><span class="h1">%</span></div>
               </div>
               </a>
 
@@ -147,86 +147,138 @@ Address all correspondence regarding this license to Virginia Tech's electronic 
         </div>
      <div class="row">
             <div class="col-md-6 col-xs-12 col-sm-6" id="actt"> <a href="#" class="stats-container" >
-              <div class="stats-heading">Thermostat Mode</div>
-              <div class="stats-body-alt">
-                <div class="text-center">
-                    <button class="btn btn-default btn-lg" type="button" id="th_heat" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}><i class="shortcut-icon icon-fire"></i>  Heat</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-default btn-lg" type="button" id="th_cool" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}><i class="shortcut-icon icon-tint"></i>  Cool</button>&nbsp;&nbsp;&nbsp;
-                     <button class="btn btn-default btn-lg" type="button" id="th_off" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}><i class="shortcut-icon icon-off"></i>  Off</button>
-                </div>
-                </div>
-              <div class="stats-footer">#</div>
-              </a> </div>
-            <div class="col-md-6 col-xs-12 col-sm-6" id="actt1"> <a href="#" class="stats-container">
-              <div class="stats-heading">Fan Mode</div>
-              <div class="stats-body-alt">
-                <div class="text-center">
-                    <button class="btn btn-default btn-lg" type="button" id="fan_auto" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}><i class="shortcut-icon icon-leaf"></i>  Auto</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-default btn-lg" type="button" id="fan_on" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}><i class="shortcut-icon icon-off"></i>  On</button>&nbsp;&nbsp;&nbsp;
-                </div>
-                </div>
-              <div class="stats-footer">#</div>
-              </a> </div>
 
-        </div>
+              {% if device_type_id != '4NWS' %} <br/><br/><br/>{% endif %}
+                <a href="#" class="stats-container" >
+              <div class="stats-heading">Temperature</div>
+              <div class="stats-body-alt" >
+                <div class="text-center"><span class="h1" id="temperature">{{ device_data.temperature }}</span><span class="h1">&deg;F</span></div>
+              </div>
+              </a>
+            </div>
+
+{#              <div class="stats-heading">Thermostat Mode</div>#}
+{#              <div class="stats-body-alt">#}
+{#                <div class="text-center">#}
+{#                    <button class="btn btn-default btn-lg" type="button" id="th_heat" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}><i class="shortcut-icon icon-fire"></i>  Heat</button>&nbsp;&nbsp;&nbsp;#}
+{#                    <button class="btn btn-default btn-lg" type="button" id="th_cool" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}><i class="shortcut-icon icon-tint"></i>  Cool</button>&nbsp;&nbsp;&nbsp;#}
+{#                     <button class="btn btn-default btn-lg" type="button" id="th_off" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}><i class="shortcut-icon icon-off"></i>  Off</button>#}
+{#                </div>#}
+{#                </div>#}
+{#              <div class="stats-footer">#</div>#}
+{#              </a> </div>#}
+            <div class="col-md-6 col-xs-12 col-sm-6" id="actt1"> <a href="#" class="stats-container">
+              {% if device_type_id != '4NWS' %} <br/><br/><br/>{% endif %}
+                <a href="#" class="stats-container" >
+              <div class="stats-heading">Humidity</div>
+              <div class="stats-body-alt" >
+                <div class="text-center"><span class="h1" id="humidity">{{ device_data.humidity }}</span><span class="h1">%</span></div>
+              </div>
+              </a>
+            </div>
+
+{#              <div class="stats-heading">Fan Mode</div>#}
+{#              <div class="stats-body-alt">#}
+{#                <div class="text-center">#}
+{#                    <button class="btn btn-default btn-lg" type="button" id="fan_auto" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}><i class="shortcut-icon icon-leaf"></i>  Auto</button>&nbsp;&nbsp;&nbsp;#}
+{#                    <button class="btn btn-default btn-lg" type="button" id="fan_on" {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}><i class="shortcut-icon icon-off"></i>  On</button>&nbsp;&nbsp;&nbsp;#}
+{#                </div>#}
+{#                </div>#}
+{#              <div class="stats-footer">#</div>#}
+{#              </a> </div>#}
+{##}
+{#        </div>#}
         <div class="row">
             <div class="col-md-4 col-xs-12 col-sm-6" id="actt"> <a href="#" class="stats-container" >
-              <div class="stats-heading">Heat SetPoint</div>
-              <div class="stats-body-alt">
-                <div class="text-center">
-                    <span class="h1" id="heat_setpoint">{{ device_data.heat_setpoint }}</span><span class="h1">&deg;F</span>
-                    <button class="btn btn-warning" id="heatplus" type="button"
-                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}
-                            ><span class="h4">+</span></button>
-                    <button class="btn btn-info" id="heatminus" type="button"
-                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}
-                            ><span class="h4">-</span></button>
-                </div>
-                </div>
-              <div class="stats-footer">#</div>
-              </a> </div>
-            <div class="col-md-4 col-xs-12 col-sm-6" id="actt1"> <a href="#" class="stats-container">
-              <div class="stats-heading">Cool SetPoint</div>
-              <div class="stats-body-alt">
-                <div class="text-center">
-                    <span class="h1" id="cool_setpoint">{{ device_data.cool_setpoint }}</span><span class="h1">&deg;F</span>
-                    <button class="btn btn-warning" id="coolplus" type="button"
-                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}
-                            ><span class="h4">+</span></button>
-                    <button class="btn btn-info" id="coolminus" type="button"
-                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}
-                            ><span class="h4">-</span></button>
-                </div>
-                </div>
-              <div class="stats-footer">#</div>
-              </a> </div>
-        <div class="col-md-4 col-xs-12 col-sm-6" id="actt1"> <a href="#" class="stats-container">
-              <div class="stats-heading">Allow Override</div>
-              <div class="stats-body-alt">
-                <div class="text-center">
-                    <button class="btn btn-default" id="override_yes" type="button"
-                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}
-                            ><span class="h4">YES</span></button>
-                    <button class="btn btn-default" id="override_no" type="button"
-                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled
-                        {% endif %}
-                            ><span class="h4">NO</span></button>
-                </div>
-                </div>
-              <div class="stats-footer">#</div>
-              </a> </div>
 
-        </div>
+{#       #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       #}
+             {% if device_type_id != '4NWS' %} <br/><br/><br/>{% endif %}
+                <a href="#" class="stats-container" >
+              <div class="stats-heading">Pressure</div>
+              <div class="stats-body-alt" >
+                <div class="text-center"><span class="h1" id="pressure">{{ device_data.pressure }}</span><span class="h1">inHG</span></div>
+              </div>
+              </a>
+            </div>
+{#       #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       #}
+{#                <div class="text-center">#}
+{#                    <span class="h1" id="humidity">{{ device_data.heat_setpoint }}</span><span class="h1">&deg;F</span>#}
+{#                    <button class="btn btn-warning" id="heatplus" type="button"#}
+{#                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}#}
+{#                            ><span class="h4">+</span></button>#}
+{#                    <button class="btn btn-info" id="heatminus" type="button"#}
+{#                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}#}
+{#                            ><span class="h4">-</span></button>#}
+{#                </div>#}
+{#                </div>#}
+{#              <div class="stats-footer">#</div>#}
+{#              </a> #}
+
+            <div class="col-md-4 col-xs-12 col-sm-6" id="actt1"> <a href="#" class="stats-container">
+
+            {#       #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       #}
+             {% if device_type_id != '4NWS' %} <br/><br/><br/>{% endif %}
+                <a href="#" class="stats-container" >
+              <div class="stats-heading">CO2</div>
+              <div class="stats-body-alt" >
+                <div class="text-center"><span class="h1" id="co2">{{ device_data.co2 }}</span><span class="h1">ppm</span></div>
+              </div>
+              </a>
+            </div>
+{#       #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       #}
+
+{#              <div class="stats-heading">Pressure</div>#}
+{#              <div class="stats-body-alt">#}
+{#                <div class="text-center">#}
+{#                    <span class="h1" id="pressure">{{ device_data.cool_setpoint }}</span><span class="h1">&deg;F</span>#}
+{#                    <button class="btn btn-warning" id="coolplus" type="button"#}
+{#                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}#}
+{#                            ><span class="h4">+</span></button>#}
+{#                    <button class="btn btn-info" id="coolminus" type="button"#}
+{#                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}#}
+{#                            ><span class="h4">-</span></button>#}
+{#                </div>#}
+{#                </div>#}
+{#              <div class="stats-footer">#</div>#}
+{#              </a> </div>#}
+        <div class="col-md-4 col-xs-12 col-sm-6" id="actt1"> <a href="#" class="stats-container">
+
+        {#       #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       #}
+             {% if device_type_id != '4NWS' %} <br/><br/><br/>{% endif %}
+                <a href="#" class="stats-container" >
+              <div class="stats-heading">Noise</div>
+              <div class="stats-body-alt" >
+                <div class="text-center"><span class="h1" id="noise">{{ device_data.noise }}</span><span class="h1">dB</span></div>
+              </div>
+              </a>
+            </div>
+{#       #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!       #}
+
+{#              <div class="stats-heading">Allow Override</div>#}
+{#              <div class="stats-body-alt">#}
+{#                <div class="text-center">#}
+{#                    <button class="btn btn-default" id="override_yes" type="button"#}
+{#                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}#}
+{#                            ><span class="h4">YES</span></button>#}
+{#                    <button class="btn btn-default" id="override_no" type="button"#}
+{#                            {% if request.user.get_profile.group.name|lower != 'admin' and request.user.get_profile.zone.zone_id !=  device_zone  %} disabled#}
+{#                        {% endif %}#}
+{#                            ><span class="h4">NO</span></button>#}
+{#                </div>#}
+{#                </div>#}
+{#              <div class="stats-footer">#</div>#}
+{#              </a> </div>#}
+
         <div class="row">
             <div class="text-center">
                 {% if request.user.get_profile.group.name|lower == 'admin' or request.user.get_profile.zone.zone_id ==  device_zone  %}

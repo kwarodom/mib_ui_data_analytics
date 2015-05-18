@@ -51,6 +51,7 @@ from powermeter.models import PowerMeter
 from helper import config_helper
 from _utils import page_load_utils as _helper
 from ZMQHelper.zmq_pub import ZMQ_PUB as zmqPub
+from thermostat.models import Thermostat
 from weathersensor.models import weather_sensor
 from lighting.models import Lighting
 from smartplug.models import Plugload
@@ -89,7 +90,6 @@ def weather_sensor(request, mac):
     print 'weather_sensor pageload'
     context = RequestContext(request)
     mac = mac.encode('ascii', 'ignore')
-
     device_metadata = [ob.device_control_page_info() for ob in DeviceMetadata.objects.filter(mac_address=mac)]
     print device_metadata
     device_type = device_metadata[0]['device_type']
@@ -98,11 +98,16 @@ def weather_sensor(request, mac):
     device_type_id = device_type_id.device_model_id
     print device_type_id
     print __.SUB_SOCKET
-    device_status = [ob.data_as_json() for ob in weather_sensor.objects.filter(weather_sensor_id=device_id)]
-    device_zone = device_status[0]['zone']['id']
-    device_nickname = device_status[0]['nickname']
-    zone_nickname = device_status[0]['zone']['zone_nickname']
-    override = device_status[0]['override']
+    try:
+        device_status = [ob.data_as_json() for ob in weather_sensor.objects.filter(weather_sensor_id=device_id)]
+        device_zone = device_status[0]['zone']['id']
+        device_nickname = device_status[0]['nickname']
+        zone_nickname = device_status[0]['zone']['zone_nickname']
+        # override = device_status[0]['override']
+    except:
+        device_zone = 999
+        device_nickname = "Netatmo1"
+        zone_nickname = "MiB Core"
 
     info_required = "Update weather_sensor data"
     ieb_topic = '/ui/agent/bemoss/' + str(device_zone) + '/' + device_type + '/' + device_id + '/device_status'
@@ -176,7 +181,7 @@ def weather_sensor(request, mac):
     print "icon "+weather_icon
 
     zones = [ob.as_json() for ob in Building_Zone.objects.all()]
-    weathersensors_sn = [ob.data_side_nav() for ob in weather_sensor.objects.filter(network_status='ONLINE', weathersensor_id__bemoss=True)]
+    thermostats_sn = [ob.data_side_nav() for ob in Thermostat.objects.filter(network_status='ONLINE', thermostat_id__bemoss=True)]
     vav_sn = [ob.data_side_nav() for ob in VAV.objects.filter(network_status='ONLINE', vav_id__bemoss=True)]
     rtu_sn = [ob.data_side_nav() for ob in RTU.objects.filter(network_status='ONLINE', rtu_id__bemoss=True)]
     lighting_sn = [ob.data_side_nav() for ob in Lighting.objects.filter(network_status='ONLINE', lighting_id__bemoss=True)]
@@ -188,7 +193,7 @@ def weather_sensor(request, mac):
     active_al = get_notifications()
     context.update({'active_al':active_al})
     context.update({
-            'zones': zones, 'thermostat_sn': weathersensors_sn,
+            'zones': zones, 'thermostat_sn': thermostats_sn,
              'lighting_sn': lighting_sn, 'plugload_sn': plugload_sn, 'occ_sensors_sn': occ_sensors_sn,
              'lt_sensors_sn': lt_sensors_sn, 'mtn_sensors_sn': mtn_sensors_sn,  'powermeters_sn': powermeters_sn,
              'vav_sn': vav_sn, 'rtu_sn': rtu_sn})
@@ -197,7 +202,7 @@ def weather_sensor(request, mac):
         'weathersensor/weathersensor.html',
         {'device_id': device_id, 'device_zone': device_zone, 'device_type_id': device_type_id, 'zone_nickname': zone_nickname, 'mac_address': mac,
          'device_nickname': device_nickname, 'device_data': vals, 'location': location, 'temp_f': temp_f, 'humidity': humidity, 'precip': precip,
-         'winds': winds, 'override': override, 'weather_icon': weather_icon, 'weather': weather, 'mac': mac},
+         'winds': winds, 'weather_icon': weather_icon, 'weather': weather, 'mac': mac},
         context)
 
 
